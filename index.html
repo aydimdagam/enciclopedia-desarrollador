@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Enciclopedia de criaturas</title>
+<link rel="stylesheet" href="auxiliar/enciclopedia.css" type="text/css">
+<script type="text/javascript" src="auxiliar/sessvars.js"></script>
+<script type="text/javascript" src="auxiliar/prototype.js"></script>
+<script type="text/javascript" src="auxiliar/swfobject.js"></script>
+<script type="text/javascript" src="auxiliar/autocompletar.js"></script>
+<script type="text/javascript" src="auxiliar/ajax.js"></script>
+</head>
+
+<body>
+
+<div id="contenedor">
+    <div id="izda">
+    	<h1>Enciclopedia de Criaturas.</h1>
+        <form autocomplete="off">
+            <label for="familia">Selecciona el Tipo de Criaturas:</label>
+            <select id="familia" name="familia">
+            	<option>Cargando...</option>
+            </select>
+            <br><br>
+            <label for="criatura">Selecciona la Criatura:</label>
+            <select id="criatura" name="criatura">
+            	<option>- Deshabilitado -</option>
+            </select> 
+            <br><br>
+            <label for="buscar">Buscar la Criatura:</label>
+            <input type="text" id="buscar" name="bucar" size="20">
+            <input type="text" id="oculto" name="oculto" style="display:none;">
+        </form>
+		<div id="diosguarro"></div><!-- para que inserte las sugerencias antes del resto -->
+		<div id="aleatoria">Seleccionar Criatura al azar</div>
+		<div id="bso">Este será el texto sustituido</div>            
+	</div>
+    
+    <div id="dcha">   
+		<div id="tabs">
+			<ul>
+				<li>Criatura</li>
+				<li>Rolemaster</li>
+				<li>Galerías</li>
+				<li>Admin</li>
+			</ul>
+		</div>
+ 
+		<div id="cabecera">
+			<div id="izquierda">
+			    <div id="nombre"></div>
+			   	<div id="restriccion"></div>
+		    	<div id="intro"></div>
+			</div>
+			<div id="derecha">
+				<div id="imagen"></div>
+			</div>			
+		</div>
+		
+		<div id="contenido">
+			<div id="descripcion"></div>
+			<div id="notas"></div>
+		</div>
+		
+    </div>
+    
+
+</div>
+    <div id="pie">
+    	<ul>
+    		<li><a href="javascript:;">Contactar</a></li>
+    		<li><a href="http://www.lamagiaenarda.com">La Magia en Arda</a></li>
+    		<li><a href="javascript:;">BLOG</a></li>
+    	</ul>
+    	<div><a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/es/" target="_blank">
+    	<span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/Text" property="dc:title" rel="dc:type">
+    	Enciclopedia de Criaturas versión AJAX</span> se nutre de la licencia Creative Commons Reconocimiento-No comercial - 
+    	Copyleft 2010.</a></div>
+    </div>
+
+</body>
+</html>
