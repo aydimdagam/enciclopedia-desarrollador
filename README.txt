@@ -14,3 +14,5 @@ Incluye:
 -Funcionalidad nombre.
 -a–adir nombres campos.
 -solucionado problema bso.swf aunque falta acabarlo.
+-A–adido WIKI
+-A–adido lightBox

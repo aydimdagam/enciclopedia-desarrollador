@@ -78,7 +78,7 @@ function cargaDatosCriatura(){
 
 //CARGAMOS los DATOS de la Criatura elegida desde BUSCAR
 function cargaDatosCriaturaBuscar(){
-	new Ajax.Request("auxiliar/cargaDatosCriatura.php?nocache=" + Math.random(), {
+	new Ajax.Updater("auxiliar/cargaDatosCriatura.php?nocache=" + Math.random(), {
 	method: 'POST',
 	requestHeaders:{'Content-Type' : 'application/x-www-form-urlencoded'},
 	parameters: 'nombreCriatura='+criaturaSeleccionada,
@@ -126,16 +126,17 @@ function aplicarColoresCriatura(color0, color1, color2)
 {
 	//backgrounds
 	document.body.style.background=color1;	//FONDO
-	$("dcha").style.background=color1;		//DIV dcha
+	$("column-content").style.background=color1;		//DIV dcha
 	$("imagen").style.background=color0;	//imagen
 		$("imagen").style.opacity=0.7;		//imagen: opacidad
+	$("content").style.background=color2;	//DIV contenid
 	$("cabecera").style.background=color2;	//DIV contenido
 	$("contenido").style.background=color2;	//DIV contenido
 	//letras
 	$("contenido").style.color=color1;		//
 	$("restriccion").style.color=color1;		//
 	$("nombre").style.color=color1;			//el nombre: color base	
-	$("izda").style.color=color2;			//izquierda: color claro
+	$("columna-uno").style.color=color2;			//izquierda: color claro
 	$("aleatoria").style.color=color2;		//aleatoria: color claro
 	$("intro").style.color=color0;			//intro: color oscuro
 	//
@@ -194,10 +195,10 @@ function muestraDatosCriatura(peticion)
 			{
 				switch(claves[i])
 				{
-					case "nombre":						
+					case "nombre":
 						var imagen=sustituirCaracteresChungos(valores[i], CharsTranslation);						
 						$("imagen").innerHTML="<a href=\"imagenes/" + imagen.toLowerCase() + 
-						".jpg\" target=\"_blank\"><img width=\"300\" height=\"300\" border=\"0\" src=\"imagenes/" + imagen.toLowerCase() + ".jpg\" /></a>";
+						".jpg\" rel=\"lightbox\"><img width=\"400\" height=\"400\" border=\"0\" src=\"imagenes/" + imagen.toLowerCase() + ".jpg\" /></a>";						
 						//
 						$(claves[i]).innerHTML="";
 						var letrasNombre=valores[i].toArray();
@@ -316,12 +317,7 @@ function tabsClasses()
 			//carga la galería de la criatura
 			deMomento("Galer&iacute;as.", null, "<p class='primero'>Pendiente. Disculpen las molestias.</p>", 
 					null, null, null);		//reseteamos los campos de momento para hacer el efecto de cambio de sección		
-			break;			
-		case "Admin":
-			//carga el formulario de autenticación o  Funcionalidades del Admin si ya estás logeado
-			deMomento("Formulario de Autenticaci&oacute;n.", null, "<p class='primero'>Pendiente. Disculpen las molestias.</p>", 
-					null, null, null);		//reseteamos los campos de momento para hacer el efecto de cambio de sección
-			break;	
+			break;
 		default:
 			break;				
 	}
@@ -372,7 +368,7 @@ function alCargar()
 	//Cargamos el Objeto FLASH con unos parámetros iniciales
 	var flashvars = {color: "0xffffff"};
 	var params = {menu: "false", wmode: "transparent"};
-	swfobject.embedSWF("auxiliar/bso.swf", "bso", "360", "330", "9.0.0","", flashvars, params);
+	swfobject.embedSWF("auxiliar/bso.swf", "bso", "260", "330", "9.0.0","", flashvars, params);
 	//
 	//
 	//Muestra en qué PESTAÑA te encuentras (en realidad estas pestañas son el MENÚ principal) y le asigna un evento
