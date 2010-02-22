@@ -18,7 +18,6 @@ Array.prototype.formateaLista = function() {
 	}
   }
   codigoHtml += "</ul>";
-
   return codigoHtml;
 };
 

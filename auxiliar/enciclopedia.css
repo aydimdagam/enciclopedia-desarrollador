@@ -100,7 +100,6 @@ div
 	position: relative;
 	padding:20px 30px 20px 30px;
 	min-width: 750px;
-	min-height:750px;
 	background: #FEDFC8;
 	-webkit-border-top-left-radius: 20px;
 	-webkit-border-bottom-left-radius: 20px;
@@ -119,13 +118,13 @@ div
 {
 	margin-top:20px;
 }
-	#sugerencias 
-	{
-		width:200px;
-		border:1px solid white;
-		display:none;
-		margin-left: 83px;
-	}
+#sugerencias 
+{
+	width:200px;
+	border:1px solid white;
+	display:none;
+	margin-left: 105px;
+}
 	#sugerencias ul 
 	{
 		margin: 0;
@@ -133,14 +132,15 @@ div
 	}
 	#sugerencias ul li 
 	{
-		padding: .2em;
+		padding: 3px;
 		border-bottom: 1px solid white;
 	}
 	.seleccionado
 	{
 		font-weight:bold;
-		background-color: red;
+		background: red;
 	}
+
 
 #aleatoria
 {
@@ -226,7 +226,6 @@ div
 			margin: 30px 10px 0px 0px;
 			padding: 0px 30px 0px 20px;
 			text-align: justify;
-			xmin-width: 300px;
 			min-height: 250px;
 			font-size: 18px;
 			font-style:italic;
@@ -246,6 +245,7 @@ div
 			margin: 0px 0px 20px 20px;
 			padding: 20px;
 			width:400px; height: 400px;
+			clear: both;
 			
 			-webkit-border-radius: 20px;
 			-moz-border-radius: 20px;
@@ -256,6 +256,7 @@ div
 #descripcion, #notas
 {
 	text-align:justify;
+	min-height: 100px;
 }
 .primero{
 	margin-top: 30px;
@@ -318,17 +319,65 @@ div
 		opacity: 1;
 		filter: alpha(opacity=100);
 	}
+	
+#pie{
+	padding-top: 30px;
+}	
+.guia{
+	font-size: 130%;
+	margin: -30px 20px 20px 0px;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+}
+.guia ul li{
+	display: none;
+}
+.anterior{
+	float: left;
+	padding-left: 20px;
+}
+.siguiente{
+	float: right;
+	padding-right: 20px;
+}
+
+#tipo{
+	font-size: 140%;
+	color: #61300E;
+	float:right;
+	display: none;
+	padding: 20px 50px 30px 0px;
+	xwidth: 100%;	
+}
+
+#volver-arriba{
+	font-size: 130%;
+	text-align: center;
+}
+#volver-arriba a:link, a:visited{
+	color:   #61300E;
+}
+#volver-arriba a:hover{
+	color:  #FEBF91;
+}
 
 
-#pie {
+#pie-pagina {
+	width: 80%;
+	margin: 20px auto 20px auto;
+	text-align: center;
+	padding-top: 20px;
+}
+
+#pie-pagina {
 	width: 80%;
 	margin: 20px auto 20px auto;
 	text-align: center;
 }
-#pie ul{
+#pie-pagina ul{
 	overflow: hidden;
 }
-#pie ul li
+#pie-pagina ul li
 {
 	display: inline;
 	margin-right: 20px;

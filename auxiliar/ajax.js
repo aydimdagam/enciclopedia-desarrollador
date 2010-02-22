@@ -78,7 +78,7 @@ function cargaDatosCriatura(){
 
 //CARGAMOS los DATOS de la Criatura elegida desde BUSCAR
 function cargaDatosCriaturaBuscar(){
-	new Ajax.Updater("auxiliar/cargaDatosCriatura.php?nocache=" + Math.random(), {
+	new Ajax.Request("auxiliar/cargaDatosCriatura.php?nocache=" + Math.random(), {
 	method: 'POST',
 	requestHeaders:{'Content-Type' : 'application/x-www-form-urlencoded'},
 	parameters: 'nombreCriatura='+criaturaSeleccionada,
@@ -100,6 +100,74 @@ function cargarCriaturaDesdeSesion(){
 
 //
 //
+//CARGAMOS los DATOS de la Criatura ALEATORIA elegida desde el enlace
+function cargarCriaturaAleatoria() {
+	//consulta el numero de campos de la BD: generamos un valor aleatorio entre 0 y el número de campos y se lo pasamos para que busque por 'id'
+	var numAleatorio=Math.floor(Math.random()*150);
+	//
+	new Ajax.Request("auxiliar/cargaDatosCriatura.php?nocache=" + Math.random(), {		//usamos nomenclatura Prototype
+		method: 'POST',
+		requestHeaders:{'Content-Type' : 'application/x-www-form-urlencoded'},
+		parameters: 'numAleatorio=' + numAleatorio,
+		onSuccess: muestraDatosCriatura
+		});
+}
+
+//CARGAMOS los DATOS de la Criatura elegida desde la variable de SESIÓN
+//y asignamos la funcionalidad de los ENLACES ANTERIOR/SIGUIENTE
+function cargarCriaturaPorID(event)
+{
+	var element=Event.element(event);	//capturamos el elemento que produce el evento
+	//
+	if (sessvars.idCriatura==1)
+	{
+		if (element.className=="anterior")			//si es el de id anterior...
+		{
+			var idCriatura=sessvars.NumTotalCriaturas;	//sacamos el id de la variable de sesión y lo decrementamos
+			sessvars.idCriatura=idCriatura;					//volvemos a actualizar la variable de sesión con el nuevo id
+		}
+		else if (element.className=="siguiente")	//si es el de id siguiente...
+		{
+			var idCriatura=parseInt(sessvars.idCriatura)+1;		//sacamos el id de la variable de sesión y lo incrementamos
+			sessvars.idCriatura=idCriatura;						//volvemos a actualizar la variable de sesión con el nuevo id
+		}
+	}		
+	else if (sessvars.idCriatura==sessvars.NumTotalCriaturas)
+	{
+		if (element.className=="anterior")			//si es el de id anterior...
+		{
+			var idCriatura=parseInt(sessvars.idCriatura)-1;	//sacamos el id de la variable de sesión y lo decrementamos
+			sessvars.idCriatura=idCriatura;					//volvemos a actualizar la variable de sesión con el nuevo id
+		}
+		else if (element.className=="siguiente")	//si es el de id siguiente...
+		{
+			var idCriatura=1;		//sacamos el id de la variable de sesión y lo incrementamos
+			sessvars.idCriatura=idCriatura;						//volvemos a actualizar la variable de sesión con el nuevo id
+		}
+	}		
+	else
+	{
+		if (element.className=="anterior")			//si es el de id anterior...
+		{
+			var idCriatura=parseInt(sessvars.idCriatura)-1;	//sacamos el id de la variable de sesión y lo decrementamos
+			sessvars.idCriatura=idCriatura;					//volvemos a actualizar la variable de sesión con el nuevo id
+		}
+		else if (element.className=="siguiente")	//si es el de id siguiente...
+		{
+			var idCriatura=parseInt(sessvars.idCriatura)+1;		//sacamos el id de la variable de sesión y lo incrementamos
+			sessvars.idCriatura=idCriatura;						//volvemos a actualizar la variable de sesión con el nuevo id
+		}
+	}
+	//
+	new Ajax.Request("auxiliar/cargaDatosCriatura.php?nocache=" + Math.random(), {
+		method: 'POST',
+		requestHeaders:{'Content-Type' : 'application/x-www-form-urlencoded'},
+		parameters: 'idCriatura='+idCriatura,
+		onSuccess: muestraDatosCriatura
+		});
+}
+//
+//
 //SUSTITUCIÓN DE CARACTERES EXTRAÑOS (para la URL de las imágenes de cada criatura)
 //el array de pares-valor a sustituir en una cadena (con su valor UNICODE) 
 var CharsTranslation = {'\u00e1' : 'a','\u00e9' : 'e','\u00ed' : 'i', '\u00f3' : 'o', '\u00fa' : 'u', 
@@ -107,7 +175,6 @@ var CharsTranslation = {'\u00e1' : 'a','\u00e9' : 'e','\u00ed' : 'i', '\u00f3' :
 						'\u00E4' : 'a', '\u00EB' : 'e', '\u00EF' : 'i', '\u00F6' : 'o', '\u00FC' : 'u',
 						'\u00C4' : 'A', '\u00CB' : 'E', '\u00CF' : 'I', '\u00D6' : 'O', '\u00CC' : 'U',
 						'\u00EE' : 'i', '\u00FB' : 'u', '\u00CE' : 'I', '\u00DB' : 'U', '\u00f1' : 'n', '\u00d1' : 'N', ' ': '-'};
-//var caracteresChungos=$H(CharsTranslation); var claves=caracteresChungos.keys();var valores=caracteresChungos.values();alert(claves.inspect());
 //
 //y la función para sustituir caracter extraños en una cadena
 function sustituirCaracteresChungos(cadena, listaValores)
@@ -121,25 +188,36 @@ function sustituirCaracteresChungos(cadena, listaValores)
 
 //
 //APLICAMOS gama de COLORES a cada CRIATURA (mediante estilos CSS) 
-//se le pasa la gama de colroes de cada familia de criaturas (extraído de la BD)
+//se le pasa la gama de colores de cada familia de criaturas (extraído de la BD)
 function aplicarColoresCriatura(color0, color1, color2)
 {
-	//backgrounds
-	document.body.style.background=color1;	//FONDO
+	//backgrounds de los diferentes divs
+	document.body.style.background=color1;				//FONDO
 	$("column-content").style.background=color1;		//DIV dcha
-	$("imagen").style.background=color0;	//imagen
-		$("imagen").style.opacity=0.7;		//imagen: opacidad
-	$("content").style.background=color2;	//DIV contenid
-	$("cabecera").style.background=color2;	//DIV contenido
-	$("contenido").style.background=color2;	//DIV contenido
-	//letras
+	$("imagen").style.background=color0;				//imagen
+	$("imagen").style.opacity=0.7;						//imagen: opacidad
+	$("content").style.background=color2;				//DIV contenid
+	$("cabecera").style.background=color2;				//DIV contenido
+	$("contenido").style.background=color2;				//DIV contenido
+	//
+	$("imageDataContainer").style.background=color1;	//color del contenedor de la imagen en grande (LightBox)
+	$("outerImageContainer").style.background=color1;	//color del borde de abajo en la imagen en grande (LightBox)
+	//
+	//letras en los divs
 	$("contenido").style.color=color1;		//
-	$("restriccion").style.color=color1;		//
+	$("restriccion").style.color=color1;	//
 	$("nombre").style.color=color1;			//el nombre: color base	
-	$("columna-uno").style.color=color2;			//izquierda: color claro
+	$("columna-uno").style.color=color2;	//izquierda: color claro
 	$("aleatoria").style.color=color2;		//aleatoria: color claro
 	$("intro").style.color=color0;			//intro: color oscuro
+	$("tipo").style.color=color1;
 	//
+	var guias=$$("#content .guia ul li");			//enlaces ANTERIOR/SIGUIENTE
+	guias.each(function(guias)
+	{
+		guias.style.color=color1;
+	});
+	//ETIQUETAS
 	var enlaces=$$("a");
 	enlaces.each(function(enlaces)
 	{
@@ -147,6 +225,18 @@ function aplicarColoresCriatura(color0, color1, color2)
 		enlaces.style.color=color2;
 	});
 	//
+	$$("#volver-arriba a")[0].style.color=color1;	//color para el enlace volver arriba
+	$$("h1")[0].style.color=color2;					//color para el título principal de la página: Enciclopedia de Criaturas
+	//
+	//PESTAÑAS
+	var tabs=$$('#tabs ul li');
+	tabs.each(function(tabs)
+	{
+		tabs.style.background=color2;	//pestañas (LI)
+		tabs.style.color=color1;
+	});	
+	//
+	//FORM
 	var etiquetas=$$("label");
 	etiquetas.each(function(etiquetas)
 	{
@@ -159,15 +249,9 @@ function aplicarColoresCriatura(color0, color1, color2)
 		listas.style.borderColor=color2;
 	});
 	//
-	$$("input")[0].style.borderColor=color2;	//
-	$$("h1")[0].style.color=color2;				//color para el título principal de la página: Enciclopedia de Criaturas
+	$$("input")[0].style.borderColor=color2;
 	//
-	var tabs=$$('#tabs ul li');
-	tabs.each(function(tabs)
-	{
-		tabs.style.background=color2;	//pestañas (LI)
-		tabs.style.color=color1;
-	});
+	//WIKIPEDIA
 }
 
 //
@@ -195,6 +279,19 @@ function muestraDatosCriatura(peticion)
 			{
 				switch(claves[i])
 				{
+					case "id":
+						//guardamos el id de la criatura para posteriormente poder acceder a la anterior/ siguiente											
+						sessvars.idCriatura=valores[i];
+						//y habilitamos la funcionalidad ANTERIOR/SIGUIENTE
+						var siguienteAnterior=$$("#content .guia ul li");		//seleccionamos las pestañas mediante función Prototype
+						siguienteAnterior.each(function(siguienteAnterior)
+						{
+							siguienteAnterior.style.display="inline";
+							siguienteAnterior.style.cursor="pointer";	//emulamos que sean pinchables
+							siguienteAnterior.style.cursor="hand";		//les asignamos cursor, ya que no son enlaces normales y por defecto no lo tienen					
+							Event.observe(siguienteAnterior, "click", cargarCriaturaPorID);
+						});					
+						break;
 					case "nombre":
 						var imagen=sustituirCaracteresChungos(valores[i], CharsTranslation);						
 						$("imagen").innerHTML="<a href=\"imagenes/" + imagen.toLowerCase() + 
@@ -211,18 +308,7 @@ function muestraDatosCriatura(peticion)
 					case "intro":
 						$(claves[i]).innerHTML=valores[i];						
 						break;
-					case "descripcion":						
-						/*var subtitulo=document.createElement("h2");
-						$(claves[i]).appendChild(subtitulo);
-						//
-						var letrasSubtitulo=claves[i].toArray();
-						for(var j=0;j<letrasSubtitulo.size();j++)
-						{
-							$$("#descripcion h2").innerHTML +=letrasSubtitulo[j];
-						}						
-						var parrafo=document.createElement("p");
-						$(claves[i]).appendChild(parrafo);
-						$$("#descripcion p").innerHTML=valores[i];*/
+					case "descripcion":
 					case "notas":
 						var subtitulo=primeraMayuscula(claves[i]);
 						$(claves[i]).innerHTML="<h2>"+subtitulo+":</h2>"+valores[i];
@@ -234,6 +320,12 @@ function muestraDatosCriatura(peticion)
 						//aplicamos los colores (mediante estilos CSS)
 						aplicarColoresCriatura("#"+valores[i-2], valores[i-1], "#"+valores[i]);
 						break;
+					case "familia":
+						$("tipo").innerHTML="<u>Tipo:</u> "+valores[i];
+						$("tipo").style.display="block";
+						break;						
+					case "NumTotalCriaturas":
+						sessvars.NumTotalCriaturas=valores[i];
 					case "restriccion":
 						var valorRestriccion=parseInt(valores[i]);
 						var lista="<ul>\n<li id='claveRestriccion'>"+primeraMayuscula(claves[i])+":</li>";
@@ -270,20 +362,6 @@ function muestraDatosCriatura(peticion)
 			}			
 		}
 	} 
-}
-//
-//
-//CARGAMOS los DATOS de la Criatura ALEATORIA elegida desde el enlace
-function cargarCriaturaAleatoria() {
-	//consulta el numero de campos de la BD: generamos un valor aleatorio entre 0 y el número de campos y se lo pasamos para que busque por 'id'
-	var numAleatorio=Math.floor(Math.random()*150);
-	//
-	new Ajax.Request("auxiliar/cargaDatosCriatura.php?nocache=" + Math.random(), {		//usamos nomenclatura Prototype
-		method: 'POST',
-		requestHeaders:{'Content-Type' : 'application/x-www-form-urlencoded'},
-		parameters: 'numAleatorio=' + numAleatorio,
-		onSuccess: muestraDatosCriatura
-		});
 }
 
 //
@@ -333,19 +411,41 @@ function tabsClasses()
 			$("notas").innerHTML=notas;
 		}
 
+//Efecto roll de la imagen
+function rollover(event){
+	$("imagen").style.opacity=1;
+}
+function rollout(){
+	$("imagen").style.opacity= .7;
+}
+
+/*function keypressHandler(event)		//funcionalidad ANTERIOR/SIGUIENTE también desde el teclado (pendiente)
+{
+	 var key=event.which || event.keyCode;
+	 //
+	 switch (key)
+	 {
+	   case Event.KEY_RIGHT:
+	     alert('moved right');
+	     break;
+	   case Event.KEY_LEFT:
+	     alert('moved left');
+	     break;
+	 }
+}*/
+
 //
-//Nos aseguramos que se ha caregado el DOM para gestionar los eventos y cargar los datos
+//Nos aseguramos que se ha cargado el DOM para gestionar los eventos y cargar los datos
 function alCargar() 
 {
 	//Cargamos la LISTA principal: Familias de criaturas en la Lista
-	new Ajax.Request("auxiliar/cargaFamilias.php?nocache=" + Math.random(), {	//usamos nomenclatura Prototype
+	new Ajax.Request("auxiliar/cargaFamilias.php?nocache=" + Math.random(), {	//usamos AJAX + Prototype
 		method: 'GET',
 		onSuccess: muestraFamilias}
 	);
-	//
-	//Y preparamos los MANEJADORES DE EVENTOS para la selección de familias y criaturas (usando la nomenclatura de Prototype)	
-	Event.observe("familia", "click", cargaCriaturas);			//nomenclatura javascript: $("familia").onchange = cargaCriaturas;
-	Event.observe("criatura", "change", cargaDatosCriatura);	//nomenclatura javascript: $("criatura").onchange = cargaDatosCriatura;
+	//Y preparamos los MANEJADORES DE EVENTOS para la selección de familias y criaturas (Prototype)	
+	Event.observe("familia", "change", cargaCriaturas);
+	Event.observe("criatura", "change", cargaDatosCriatura);
 	//
 	//
 	//ELEMENTO BUSCAR (FORM)
@@ -353,9 +453,8 @@ function alCargar()
 	var elDiv=document.createElement("div");	//Crear elemento de tipo <div> para mostrar las sugerencias del servidor
 	elDiv.id="sugerencias";
 	$("diosguarro").appendChild(elDiv); //para que inserte las sugerencias en ese lugar exactamente
-	//
 	//Y preparamos el MANEJADOR DE EVENTOS para las sugerencias en la búsqueda de criaturas con nomenclatura Prototype
-	Event.observe("buscar", "keyup", autocompleta);	//nomenclatura javascript: $("buscar").onkeyup = autocompleta;	
+	Event.observe("buscar", "keyup", autocompleta);	//nomenclatura javascript: $("buscar").onkeyup = autocompleta;
 	//
 	//
 	//asignamos un MANEJADOR DE EVENTOS al elemento ALEATORIA para que al pinchar muestre una Criatura aleatoriamente
@@ -382,7 +481,11 @@ function alCargar()
 		if (enlacesMenu.innerHTML == "Criatura")	enlacesMenu.writeAttribute("class", "menuSeleccionado");
 		else enlacesMenu.writeAttribute("class", "menuSinSeleccionar");
 	});
+	//
+	//Finalmente asignamos un MANEJADOR DE EVENTOS para el efecto rollover de la imágen
+	Event.observe("imagen", "mouseover", rollover);	//
+	Event.observe("imagen", "mouseout", rollout);	//
+	//Event.observe(window, "keyup", keypressHandler);	//
 }
-
 //Preparamos el MANEJADOR DE EVENTOS principal: onLoad (usando la nomenclatura de Prototype)	
 Event.observe(window, "load", alCargar);	//nótese que el elemento afectado es el objeto WINDOW

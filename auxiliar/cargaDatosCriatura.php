@@ -1,37 +1,38 @@
 <?php
 //
-if (isset($_POST["numAleatorio"]))
-{
-	include("consultaAleatoria.php");
-	$consultaCriatura=consultaAleatoria();
-}
-else if (isset($_POST["nombreCriatura"]))
-{
-	include("consultaCriatura.php");
-	$consultaCriatura=consultaCriatura();
-}
-//
-//llamamos a la funciónd e conexión a la BD pues aún nos queda realizar otra conexión
-//(la conexión está incluida en uno de los dos ficheros .php anteriorees que se cargan)
+//incluimos el script con las CONSULTAS BçSICAS
+include("consultas.php");
+$consultaCriatura=consultas();	//recuperamos la que toque...
+//llamamos a la funci—n de conexi—n a la BD pues aœn nos queda realizar una conexi—n m‡s (la conexi—n ya es‡ incluida en 'consultas.php')
 $conexion=db_connect();
 //
 $resultadoDatosCriatura=mysql_fetch_array($consultaCriatura);
 
-//recogemos el campo id_familia que lo necesitaremos para otra consulta
-$id_familia=$resultadoDatosCriatura["id_familia"];
-//consultamos la gama de colores de la familia de criaturas gracias al campo anterior
-$consultaColoresCriatura=mysql_query("SELECT distinct familias.gama_colores FROM familias INNER JOIN criaturas ON familias.id_familia=".$id_familia."", $conexion);
+//aœn tenemos que hacer un par de consultas m‡s...
+	//recogemos el campo id_familia que lo necesitaremos para la otra consulta
+	$id_familia=$resultadoDatosCriatura["id_familia"];
+	//es decir, la gama de colores de la familia de criaturas
+	$consultaColoresCriatura=mysql_query("SELECT distinct familias.familia, familias.gama_colores FROM familias INNER JOIN criaturas ON familias.id_familia=".$id_familia."", $conexion);
+	//
+	$resultadoColoresCriatura=mysql_fetch_array($consultaColoresCriatura);
+	//
+	//el campo tiene los cuatro colores juntos, así que pasamos a separarlos y meterlos en un array
+	$gamaColores=$resultadoColoresCriatura["gama_colores"];
+	$gamaColoresCriatura=explode(',',$gamaColores);
+	//tambiŽn adjuntamos la 'Familia' a la que pertenece
+	$familia=$resultadoColoresCriatura["familia"];
+	$gfamilia=explode(',',$familia);	
+	
+	//
+	//Nœmero total de criaturas (para la GUêA: ANTERIOR/SIGUIENTE)
+	$consultaNumTotalCriaturas=mysql_query("SELECT COUNT(*) FROM criaturas");
+	$resultadoNumTotalCriaturas=mysql_fetch_row($consultaNumTotalCriaturas);
 
-$resultadoColoresCriatura=mysql_fetch_array($consultaColoresCriatura);
-
-//el campo tiene los cuatro colores juntos, así que pasamos a separarlos y meterlos en un array
-$gamaColores=$resultadoColoresCriatura["gama_colores"];
-$gamaColoresCriatura=explode(',',$gamaColores);
-
+//
+//ahora, s’, ya podemos rellenar el array asociativo JSON a devolver en la petici—n AJAX con los pares clave-valor de todos los datos solicitados
 foreach($resultadoDatosCriatura as $codigo => $nombre)
 {
-	//repite los valores (siendo el código un índice y el nombre; no sé por qué lo del índice).
-	//en cualquier caso sólo nos interesan los que no son numéricos (nombre)
+	//en cualquier caso s—lo nos interesan los numŽricos (nombre)
 	if (!is_numeric($codigo))
 	{
 		//print_r($codigo."<br />");
@@ -39,8 +40,10 @@ foreach($resultadoDatosCriatura as $codigo => $nombre)
 		{
 			for($i=0;$i<count($gamaColoresCriatura);$i++)
 			{
-				$elementos_json[] = "\"color$i\": \"$gamaColoresCriatura[$i]\"";
-			}			
+				$elementos_json[] = "\"color$i\": \"$gamaColoresCriatura[$i]\"";	//introducimos con colores en el array asociativo JSON
+			}
+			//
+			$elementos_json[] = "\"familia\": \"$familia\"";	//adjuntamos la 'Familia' a la que pertenece la criatura		
 		}
 		else
 		{
@@ -50,15 +53,19 @@ foreach($resultadoDatosCriatura as $codigo => $nombre)
 				$nombre=str_replace(".De ",".<br /><br /><strong>De ",$nombre);
 				$nombre=str_replace("Mario Palomino Gordon","Aydim Dagam",$nombre);
 			}
-			//cuando el campo de la BD esté vacío pondremos 'en construcción'
-			//if ($nombre==null && !="restriccion")	$nombre="<i>Referencia en construcci&oacute;n. Perdonen las molestias</i>.";
+			//cuando el campo de la BD est&eacute; vac&ioacute;o pondremos 'en construcci&oacute;n'
+			if ($nombre==null && $nombre !="restriccion")	$nombre="<em>Referencia en construcci&oacute;n. Perdonen las molestias</em>.";
+			//introducimos el resto de campos de la consulta
 			$elementos_json[] = "\"$codigo\": \"$nombre\"";
 		}
 	}
 }
+//y finalmente introducimos el nœmero total de criaturas
+$elementos_json[] = "\"NumTotalCriaturas\": \"$resultadoNumTotalCriaturas[0]\"";
 
+//
 $criatura_json = "{".implode(",", $elementos_json)."}";
-
+//
 echo utf8_encode($criatura_json);
 
 ?>

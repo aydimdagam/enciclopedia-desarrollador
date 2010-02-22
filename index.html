@@ -4,11 +4,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Enciclopedia de criaturas</title>
 	<link rel="stylesheet" href="auxiliar/enciclopedia.css" type="text/css">
-	<link rel="stylesheet" href="lightbox/lightbox.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="framework/lightbox.css" type="text/css" media="screen" />
 	
-	<script type="text/javascript" src="auxiliar/prototype.js"></script>
-	<script type="text/javascript" src="lightbox/scriptaculous.js?load=effects,builder"></script> 
-	<script type="text/javascript" src="lightbox/lightbox.js"></script> 
+	<script type="text/javascript" src="framework/prototype.js"></script>
+	<script type="text/javascript" src="framework/scriptaculous.js?load=effects,builder"></script> 
+	<script type="text/javascript" src="framework/lightbox.js"></script>
 			
 	<script type="text/javascript" src="auxiliar/sessvars.js"></script>		
 	<script type="text/javascript" src="auxiliar/swfobject.js"></script>
@@ -17,25 +17,41 @@
 	</head>
 
 	<body>
-	
+		<a name="arriba"></a>
 		<div id="globarWrapper">
 		    
 		    <div id="column-content">
 		    	
 		    	<div id="content">
 		    		
-					<div id="cabecera">
-							<div id="imagen"></div>
-						    <div id="nombre"></div>
-						   	<div id="restriccion"></div>
-					    	<div id="intro"></div>									
+					<div id="cabecera">						
+						<div class="guia">
+							<ul>
+								<li class="anterior">Anterior Criatura</li>
+								<li class="siguiente">Siguiente Criatura</li>
+							</ul>
+						</div>
+						<div id="tipo"></div>
+						<div id="imagen"></div>						
+					    <div id="nombre"></div>
+					   	<div id="restriccion"></div>
+				    	<div id="intro"></div>								
 					</div>
 					
 					<div id="contenido">
 						<div id="descripcion"></div>
 						<div id="notas"></div>
 					</div>
-		    		
+					
+					<div id="pie">
+						<div class="guia">
+							<ul>
+								<li class="anterior">Anterior Criatura</li>
+								<li class="siguiente">Siguiente Criatura</li>
+							</ul>
+						</div>
+						<div id="volver-arriba"><a href="#arriba">Volver Arriba</a></div>
+					</div>			    		
 			 	</div>			 				
 		    </div>	
 		
@@ -52,10 +68,9 @@
 				<div id="autenticarse">
 						<ul>
 							<li id="registrase"><a href="javascript:;">Registrarse</a></li>
-							<li id="entrar"><a href="javascript:;">Entrar</a></li>	
-							<li id="salir"><a href="javascript:;" style="display:none">Salir</a></li>
+							<li id="entrar"><a href="javascript:;">Entrar</a></li>
 						</ul>
-				</div>
+				</div>				
 				
 				<h1>Enciclopedia de Criaturas</h1>		
 
@@ -72,10 +87,10 @@
 				            </select> 
 				            <br><br>
 				            <label for="buscar">Buscar la Criatura:</label>
-				            <input type="text" id="buscar" name="bucar" size="20">
+				            <input type="text" id="buscar" name="buscar" size="20">
 				            <input type="text" id="oculto" name="oculto" style="display:none;">
 				        </form>
-						<div id="diosguarro"></div><!-- para que inserte las sugerencias antes del resto -->
+						<div id="diosguarro"></div>
 						<div id="aleatoria">Seleccionar Criatura al azar</div>
 				</div>
 				
@@ -83,7 +98,7 @@
 		    	    
 			</div>
 	    
-		    <div id="pie">
+		    <div id="pie-pagina">
 		    	<ul>
 		    		<li><a href="javascript:;">CONTACTAR</a></li>
 		    		<li><a href="http://www.lamagiaenarda.com">La Magia en Arda</a></li>
